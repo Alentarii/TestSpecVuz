@@ -19,11 +19,11 @@
 #include <functional>
 
 
-static int cores_count = std::thread::hardware_concurrency(); //Узнаем кол-во ядер
-
-
 void getRecurs(std::queue<std::string>&, const std::string&);
 void Arhivator(std::string);
+
+static int cores_count = std::thread::hardware_concurrency(); //Узнаем кол-во ядер
+
 
 enum class TaskStatus {
     in_q,
@@ -31,7 +31,6 @@ enum class TaskStatus {
 };
 
 
-// C++ 17
 class Task {
 public:
     template <typename FuncRetType, typename ...Args, typename ...FuncTypes>
@@ -184,18 +183,6 @@ private:
     std::atomic<uint64_t> last_idx{ 0 };
     std::atomic<uint64_t> cnt_completed_tasks{ 0 };
 };
-
-int int_sum(int a, int b) {
-    return a + b;
-}
-
-void void_sum(int& c, int a, int b) {
-    c = a + b;
-}
-
-void void_without_argument() {
-    std::cout << "It's OK!" << std::endl;
-}
 
 
 int main(int argc, char** argv) {
