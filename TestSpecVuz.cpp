@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <fstream>
 #include "ThreadPool.cpp"
+#include "hcl\huffmantool.h"
 
 
 void getRecurs(std::queue<std::string>&, const std::string&);
