@@ -207,7 +207,7 @@ std::string huffmantool::compressFile(std::string sourceFile, std::string compre
     {
         freq_sorted.push(i);
     }
-    cfp* head = NULL;
+    cfp *head = NULL;
     while (!freq_sorted.empty())
     {
         cfp *first = freq_sorted.top();
