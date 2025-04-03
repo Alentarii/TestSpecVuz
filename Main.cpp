@@ -3,14 +3,8 @@
 #include <filesystem>
 #include <fstream>
 #include "ThreadPool.cpp"
+#include "Connection.cpp"
 #include "hcl/huffmantool.h"
-
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-#include <stdio.h>
-#include <vector>
-
-#pragma comment(lib, "Ws2_32.lib")
 
 
 void getRecurs(std::queue<std::string>&, const std::string&);
@@ -55,29 +49,8 @@ int main(int argc, char** argv) {
 				std::cout << "Готово!";
 			}*/
 
-			{
-
-
-				
-
-				
-
-
-				
-
-				
-
-				
-
-				
-
-				
-			}
-
-
-
-
-			//////////////////////////////
+            Connection connectServ("172.16.200.239", 1025, 1024);
+            connectServ.OpenConnection();
 
         }
 

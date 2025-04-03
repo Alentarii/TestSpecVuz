@@ -11,11 +11,18 @@ class Connection {
 public:
 
 	Connection(std::string ip, int port, short buf) {
-		this->IP_SERV = new char[sizeof(ip)];
-		strcpy(this->IP_SERV, ip.c_str());
+
+		this->IP_SERV = new char[sizeof(ip) + 1];
+		ip.copy(this->IP_SERV, sizeof(ip) + 1);
+		this->IP_SERV[sizeof(ip)] = '\0';
+
 		this->PORT_NUM = port;
 		this->BUFF_SIZE = buf;
 
+	}
+
+	void OpenConnection() {
+		Run();
 	}
 
 	void CloseConnection() {
@@ -24,7 +31,7 @@ public:
 
 private:
 
-	void WSAStart() {
+	void WinSockStart() {
 
 		// WinSock initialization
 		WSADATA wsData;
@@ -32,7 +39,7 @@ private:
 		int erStat = WSAStartup(MAKEWORD(2, 2), &wsData);
 
 		if (erStat != 0) {
-			throw "Division by zero!" + WSAGetLastError();
+			throw "Error WinSock version initializaion #" + WSAGetLastError();
 		}
 		else
 			std::cout << "WinSock initialization is OK" << std::endl;
@@ -130,7 +137,7 @@ private:
 
 	void Talck() {
 
-		//Exchange text data between Server and Client. Disconnection if a client send "xxx"
+		//Exchange text data between Server and Client. Disconnection if a client send "end"
 
 		std::vector <char> servBuff(this->BUFF_SIZE), clientBuff(this->BUFF_SIZE);							// Creation of buffers for sending and receiving data
 		short packet_size = 0;												// The size of sending / receiving packet in bytes
@@ -144,7 +151,7 @@ private:
 			fgets(clientBuff.data(), clientBuff.size(), stdin);
 
 			// Check whether server would like to stop chatting 
-			if (clientBuff[0] == 'x' && clientBuff[1] == 'x' && clientBuff[2] == 'x') {
+			if (clientBuff[0] == 'e' && clientBuff[1] == 'n' && clientBuff[2] == 'd') {
 
 				shutdown(this->ClientConn, SD_BOTH);
 				closesocket(this->ServSock);
@@ -177,10 +184,10 @@ private:
 		WSACleanup();
 	}
 
-	void run() {
+	void Run() {
 
 		try {
-			WSAStart();
+			WinSockStart();
 			SocketInic();
 			SocketAndIPPort();
 			Listen();
