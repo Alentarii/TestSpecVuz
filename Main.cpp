@@ -5,6 +5,13 @@
 #include "ThreadPool.cpp"
 #include "hcl/huffmantool.h"
 
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+#include <stdio.h>
+#include <vector>
+
+#pragma comment(lib, "Ws2_32.lib")
+
 
 void getRecurs(std::queue<std::string>&, const std::string&);
 void Arhivator(std::string);
@@ -14,6 +21,8 @@ int main(int argc, char** argv) {
 
     setlocale(LC_ALL, "rus");
 
+	argc = 2;//////////////////////////////
+
     if (argc == 1) { // если в аргументах только имя программы
         std::cout << "Вы не ввели путь" << std::endl; // выводим, что нет аргументов
     }
@@ -21,31 +30,55 @@ int main(int argc, char** argv) {
 
         for (int i = 1; i < argc; i++) {
 
-            std::string put = argv[i]; //получаем путь
+			/*std::string put = argv[i]; //получаем путь
 
-            std::cout << "Ваш путь: " << put << std::endl;
+			std::cout << "Ваш путь: " << put << std::endl;
 
-            std::queue<std::string> paths;
+			std::queue<std::string> paths;
 
-            getRecurs(paths, put); //рекурсивно получаем файлы
+			getRecurs(paths, put); //рекурсивно получаем файлы
 
-            if (!paths.empty()) {
+			if (!paths.empty()) {
 
-                int cores_count = std::thread::hardware_concurrency(); //Узнаем кол-во ядер
+				int cores_count = std::thread::hardware_concurrency(); //Узнаем кол-во ядер
 
-                Thread_pool t(cores_count);
+				Thread_pool t(cores_count);
+				while (!paths.empty()) {
 
-                while (!paths.empty()) {
+					std::cout << paths.front() << std::endl;
 
-                    std::cout << paths.front() << std::endl;
+					t.add_task(Arhivator, paths.front());  //потоки пошли в бой
+					paths.pop();
+				}
 
-                    t.add_task(Arhivator, paths.front());  //потоки пошли в бой
-                    paths.pop();
-                }
+				t.wait_all();
+				std::cout << "Готово!";
+			}*/
 
-                t.wait_all();
-                std::cout << "Готово!";
-            }
+			{
+
+
+				
+
+				
+
+
+				
+
+				
+
+				
+
+				
+
+				
+			}
+
+
+
+
+			//////////////////////////////
+
         }
 
     }
