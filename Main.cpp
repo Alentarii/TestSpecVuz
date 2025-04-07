@@ -16,8 +16,6 @@ int main(int argc, char** argv) {
 
     setlocale(LC_ALL, "rus");
 
-	argc = 2;//////////////////////////////
-
     if (argc == 1) { // если в аргументах только имя программы
         std::cout << "Вы не ввели путь" << std::endl; // выводим, что нет аргументов
     }
@@ -25,13 +23,65 @@ int main(int argc, char** argv) {
 
         for (int i = 1; i < argc; i++) {
 
-			/*std::string put = argv[i]; //получаем путь
+			std::string put = argv[i]; //получаем путь
 
 			std::cout << "Ваш путь: " << put << std::endl;
 
 			std::queue<std::string> paths;
 
 			getRecurs(paths, put); //рекурсивно получаем файлы
+
+            //кладем в общую очередь
+            std::cout << "Starting client." << std::endl;
+            try {
+                std::cout << "Creating queue..." << std::endl;
+                constexpr unsigned kQueueSize = 100;//////////////
+                shared_mq mq{ "my_queue", kQueueSize };
+
+                std::cout << "Sending ints..." << std::endl;
+
+                while (!paths.empty()) {
+
+                    mq.send(paths.front());
+
+                    paths.pop();
+                }
+            }
+            catch (boost::interprocess::interprocess_exception& ex) {
+                std::cerr << ex.what() << std::endl;
+                break;
+            }
+
+            std::cout << "Finished client." << std::endl;
+
+            //берем из общей очереди
+            std::cout << "Starting server." << std::endl;
+            try {
+                std::cout << "Opening queue..." << std::endl;
+                shared_mq mq{ "my_queue" };
+
+                std::cout << "Receiving ints..." << std::endl;
+
+
+                for (int i = 0; i < mq.get_num_msg(); ++i) {
+                    std::string x = "";
+                    try {
+                        paths.push(mq.receive());
+                    }
+                    catch (boost::interprocess::interprocess_exception& ex) {
+                        std::cerr << ex.what() << std::endl;
+                        break;
+                    }
+                    std::cout << "Received: " << x << std::endl;
+                }
+
+            }
+            catch (boost::interprocess::interprocess_exception& ex) {
+                std::cerr << ex.what() << std::endl;
+                break;
+            }
+
+            std::cout << "Finished server." << std::endl;
 
 			if (!paths.empty()) {
 
@@ -48,24 +98,7 @@ int main(int argc, char** argv) {
 
 				t.wait_all();
 				std::cout << "Готово!";
-			}*/
-
-            std::cout << "Starting client." << std::endl;
-            try {
-                std::cout << "Creating queue..." << std::endl;
-                constexpr unsigned kQueueSize = 100;
-                shared_mq mq{ "my_queue", kQueueSize };
-
-                std::cout << "Sending ints..." << std::endl;
-
-                mq.send("a");  // magic sentinel value
-            }
-            catch (boost::interprocess::interprocess_exception& ex) {
-                std::cerr << ex.what() << std::endl;
-                return 1;
-            }
-
-            std::cout << "Finished client." << std::endl;
+			}
 
         }
 
