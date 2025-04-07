@@ -3,12 +3,10 @@
 #include <filesystem>
 #include <fstream>
 #include "ThreadPool.cpp"
-#include "Connection.cpp"
 #include "hcl/huffmantool.h"
 
 
-void getRecurs(std::queue<std::string>&, const std::string&);
-void Arhivator(std::string);
+#include "shared_mq.hpp"
 
 
 int main(int argc, char** argv) {
@@ -49,8 +47,35 @@ int main(int argc, char** argv) {
 				std::cout << "Готово!";
 			}*/
 
-            Connection connectServ("172.16.200.239", 1025, 1024);
-            connectServ.OpenConnection();
+
+            //Connection connectServ("172.16.200.239", 1025, 1024);
+            //connectServ.OpenConnection();
+
+            //////////////////////////////
+
+
+            
+
+
+
+            
+            std::cout << "Starting client." << std::endl;
+            try {
+                std::cout << "Creating queue..." << std::endl;
+                constexpr unsigned kQueueSize = 1000;
+                shared_mq mq{ "my_queue", kQueueSize };
+
+                mq.send("a");
+
+                mq.send("-1");  // magic sentinel value
+
+            }
+            catch (boost::interprocess::interprocess_exception& ex) {
+                std::cerr << ex.what() << std::endl;
+                return 1;
+            }
+
+            std::cout << "Finished client." << std::endl;
 
         }
 
